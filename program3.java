@@ -4,18 +4,18 @@ class Main {
   public static void main(String[] args) {
       Scanner sc=new Scanner(System.in);
       System.out.println("Enter the rows to be printed");
-      int rows=sc.nextInt();
+      int totalRows=sc.nextInt();
       
 
-    for (int i = 1; i <= rows; ++i) {
-        int k = 0;
-      for (int space = 1; space <= rows - i; space++) {
+    for (int rowValueItr = 1; rowValueItr <= totalRows; rowValueItr++) {
+        
+      for (int space = 1; space <= totalRows - rowValueItr; space++) {
         System.out.print("*");
       }
-
-      while (k != i ) {
-        System.out.print(i+" ");
-        k++;
+    int numIterator = 0;
+      while (numIterator != rowValueItr ) {
+        System.out.print(rowValueItr+" ");
+        numIterator++;
       }
 
       System.out.print("\n");
