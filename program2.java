@@ -19,127 +19,86 @@ class HelloWorld {
         }
         return false;
     }
-    public static void main(String[] args) {
+    
+    public static ArrayList getPara(){
         Scanner sc=new Scanner(System.in);
-        System.out.println("Enter the first paragraph");
-        String paragraph1=sc.nextLine();
-         paragraph1=paragraph1.replace(".","");
-        paragraph1=paragraph1.replace(",","");
-        paragraph1=paragraph1.replace("!","");
-        String[] paraWords1 = paragraph1.split(" ");  
-        ArrayList alForFirstPara=new ArrayList();
-        alForFirstPara.addAll(Arrays.asList(paraWords1));
-        System.out.println("first para "+alForFirstPara);
-        
-        
-        System.out.println("Enter the second paragraph");
-        String paragraph2=sc.nextLine();
-        paragraph2=paragraph2.replace(".","");
-        paragraph2=paragraph2.replace(",","");
-        paragraph2=paragraph2.replace("!","");
-        String[] paraWords2 = paragraph2.split(" ");  
-        ArrayList alForSecondPara=new ArrayList();
-        alForSecondPara.addAll(Arrays.asList(paraWords2));
-        System.out.println("second para "+alForSecondPara);
-        
-        Iterator litr1=alForFirstPara.listIterator();
-	    TreeMap<Integer,ArrayList<String>> treeMap1=new TreeMap<Integer,ArrayList<String>>(Collections.reverseOrder());
-	    while(litr1.hasNext()){
-	        String local=(String)litr1.next();
+        System.out.println("Enter the  paragraph");
+        String paragraph=sc.nextLine();
+         paragraph=paragraph.replace(".","");
+        paragraph=paragraph.replace(",","");
+        paragraph=paragraph.replace("!","");
+        String[] paraWords = paragraph.split(" ");  
+        ArrayList alForPara=new ArrayList();
+        alForPara.addAll(Arrays.asList(paraWords));
+        return alForPara;
+    }
+    
+    public static TreeMap treeGenerator(ArrayList alForPara){
+        Iterator itr=alForPara.listIterator();
+	    TreeMap<Integer,ArrayList<String>> treeMap=new TreeMap<Integer,ArrayList<String>>(Collections.reverseOrder());
+	    while(itr.hasNext()){
+	        String local=(String)itr.next();
 	         if(palindromeCheck(local)){
-	             if(!treeMap1.containsKey(local.length())){
+	             if(!treeMap.containsKey(local.length())){
                  ArrayList localAl = new ArrayList();
                  localAl.add(local);
-	             treeMap1.put(local.length(),localAl);
+	             treeMap.put(local.length(),localAl);
 	             }
 	             else{
-	                 if(!treeMap1.get(local.length()).contains(local))
-	                 treeMap1.get(local.length()).add(local);
+	                 if(!treeMap.get(local.length()).contains(local))
+	                 treeMap.get(local.length()).add(local);
 	             }
 	         }
 	         
 	    }
-	    System.out.println("treeMap1 "+treeMap1);
-	    
-	    Iterator litr2=alForSecondPara.listIterator();
-	    TreeMap<Integer,ArrayList<String>> treeMap2=new TreeMap<Integer,ArrayList<String>>(Collections.reverseOrder());
-	    while(litr2.hasNext()){
-	        String local=(String)litr2.next();
-	         if(palindromeCheck(local)){
-	             if(!treeMap2.containsKey(local.length())){
-                 ArrayList localAl = new ArrayList();
-                 localAl.add(local);
-	             treeMap2.put(local.length(),localAl);
-	             }
-	             else{
-	                  if(!treeMap2.get(local.length()).contains(local))
-	                 treeMap2.get(local.length()).add(local);
-	             }
-	         }
-	         
-	    }
-	    System.out.println("treeMap2 "+treeMap2);
-	    if(treeMap1.size()>=1 && treeMap2.size()>=1){
-	    if(treeMap1.firstKey()<treeMap2.firstKey()){
-	       //start from treeMap1
-	       Iterator mapOneIterator=treeMap1.keySet().iterator();
+	    return treeMap;
+    }
+    public static void showCommon( TreeMap<Integer,ArrayList<String>> treeMap1, TreeMap<Integer,ArrayList<String>> treeMap2){
+         Iterator mapOneIterator=treeMap1.keySet().iterator();
+         boolean once =true;
 	       while(mapOneIterator.hasNext()){
 	           int mapOneCurrentKey=(int)mapOneIterator.next();
 	           if(treeMap2.containsKey(mapOneCurrentKey)){
 	               var map2CurrentValues=treeMap2.get(mapOneCurrentKey);
 	           Iterator map1Value=treeMap1.get(mapOneCurrentKey).iterator();
-	           while(map1Value.hasNext()){
+	           while(map1Value.hasNext() ){
 	               String tempMap1Value=(String)map1Value.next();
-	               if(map2CurrentValues.contains(tempMap1Value)){
-	               System.out.println("common palindrome 1 "+tempMap1Value);
+	               if(map2CurrentValues.contains(tempMap1Value) && once){
+	               System.out.println("common palindrome "+tempMap1Value);
+	               once=false;
 	               break;
 	               }
 	           }
 	           }
 	       }
+    }
+    public static void main(String[] args) {
+         ArrayList alForFirstPara=getPara();
+        System.out.println("first para "+alForFirstPara);
+        
+        ArrayList alForSecondPara=getPara();
+        System.out.println("second para "+alForSecondPara);
+        
+        TreeMap<Integer,ArrayList<String>> treeMap1=treeGenerator(alForFirstPara);
+	    System.out.println("treeMap1 "+treeMap1);
+	    
+	    TreeMap<Integer,ArrayList<String>> treeMap2=treeGenerator(alForSecondPara);
+	    System.out.println("treeMap2 "+treeMap2);
+  
+	    if(treeMap1.size()>=1 && treeMap2.size()>=1){
+	    if(treeMap1.firstKey()<treeMap2.firstKey()){
+	   
+	      showCommon(treeMap1,treeMap2);
 	       
 	    }
 	    else if(treeMap1.firstKey()>treeMap2.firstKey()){
-	        //start from treeMap2
-	        Iterator mapTwoIterator=treeMap2.keySet().iterator();
-	       while(mapTwoIterator.hasNext()){
-	           int mapTwoCurrentKey=(int)mapTwoIterator.next();
-	           if(treeMap1.containsKey(mapTwoCurrentKey)){
-	               var map1CurrentValues=treeMap1.get(mapTwoCurrentKey);
-	           Iterator map2Value=treeMap2.get(mapTwoCurrentKey).iterator();
-	           while(map2Value.hasNext()){
-	               String tempMap2Value=(String)map2Value.next();
-	               if(map1CurrentValues.contains(tempMap2Value)){
-	               System.out.println("common palindrome 2 "+tempMap2Value);
-	               break;
-	               }
-	           }
-	           }
-	       }
+	      showCommon(treeMap2,treeMap1);     
 	        
 	    }
 	    else{
-	        //start from treeMap1
-	         Iterator mapOneIterator=treeMap1.keySet().iterator();
-	       while(mapOneIterator.hasNext()){
-	           int mapOneCurrentKey=(int)mapOneIterator.next();
-	           if(treeMap2.containsKey(mapOneCurrentKey)){
-	               var map2CurrentValues=treeMap2.get(mapOneCurrentKey);
-	           Iterator map1Value=treeMap1.get(mapOneCurrentKey).iterator();
-	           while(map1Value.hasNext()){
-	               String tempMap1Value=(String)map1Value.next();
-	               if(map2CurrentValues.contains(tempMap1Value)){
-	               System.out.println("common palindrome 3 "+tempMap1Value);
-	               break;
-	               }
-	           }
-	           }
-	       }
+	        showCommon(treeMap1,treeMap2);
 	    }
 	    }
-	    
-       
-        
-      
+
     }
 }
